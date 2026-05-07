@@ -1,0 +1,67 @@
+[
+  {
+    "id": "forensic",
+    "name_ko": "법의학자",
+    "name_en": "Forensic Scientist",
+    "team": "investigator",
+    "icon": "🔬",
+    "color": "#0F6E56",
+    "secret": false,
+    "always_present": true,
+    "description_ko": "큰 화면에서 마커를 배치하세요",
+    "ability_ko": "살인자 + 사인 + 단서를 안다. 마커만으로 단서 제공"
+  },
+  {
+    "id": "murderer",
+    "name_ko": "살인자",
+    "name_en": "Murderer",
+    "team": "criminal",
+    "icon": "🔪",
+    "color": "#A32D2D",
+    "secret": true,
+    "always_present": true,
+    "description_ko": "들키지 마십시오",
+    "ability_ko": "사인 1장 + 단서 1장을 선택해 범행을 저지른다"
+  },
+  {
+    "id": "accomplice",
+    "name_ko": "공범자",
+    "name_en": "Accomplice",
+    "team": "criminal",
+    "icon": "🤝",
+    "color": "#854F0B",
+    "secret": true,
+    "always_present": false,
+    "optional": true,
+    "recommended_min_players": 6,
+    "description_ko": "살인자를 보호하세요",
+    "ability_ko": "살인자 + 사인 + 단서를 안다"
+  },
+  {
+    "id": "witness",
+    "name_ko": "목격자",
+    "name_en": "Witness",
+    "team": "investigator",
+    "icon": "👁️",
+    "color": "#3C3489",
+    "secret": true,
+    "always_present": false,
+    "optional": true,
+    "recommended_min_players": 7,
+    "description_ko": "정체를 들키면 패배합니다",
+    "ability_ko": "살인자/공범자 후보를 안다 (정확히 누가 누군지는 모름)"
+  },
+  {
+    "id": "investigator",
+    "name_ko": "수사관",
+    "name_en": "Investigator",
+    "team": "investigator",
+    "icon": "🕵️",
+    "color": "#444441",
+    "secret": false,
+    "always_present": true,
+    "fills_remaining": true,
+    "description_ko": "추리로 진실을 밝히세요",
+    "ability_ko": "정보 없음. 토론과 추리로 살인자 지목"
+  }
+]

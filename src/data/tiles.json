@@ -1,0 +1,345 @@
+{
+  "cause_of_death": {
+    "id": "cod_1",
+    "category_ko": "사망 원인",
+    "category_en": "Cause of Death",
+    "fixed": true,
+    "options": [
+      { "ko": "질식", "en": "Suffocation" },
+      { "ko": "중상", "en": "Severe Injury" },
+      { "ko": "과다 출혈", "en": "Loss of Blood" },
+      { "ko": "질병", "en": "Illness/Disease" },
+      { "ko": "독살", "en": "Poisoning" },
+      { "ko": "사고사", "en": "Accident" }
+    ]
+  },
+  "locations": [
+    {
+      "id": "loc_1",
+      "category_ko": "범죄 장소",
+      "category_en": "Location of Crime",
+      "options": [
+        { "ko": "호프집", "en": "Pub" },
+        { "ko": "서점", "en": "Bookstore" },
+        { "ko": "식당", "en": "Restaurant" },
+        { "ko": "호텔", "en": "Hotel" },
+        { "ko": "병원", "en": "Hospital" },
+        { "ko": "건설 현장", "en": "Building Site" }
+      ]
+    },
+    {
+      "id": "loc_2",
+      "category_ko": "범죄 장소",
+      "category_en": "Location of Crime",
+      "options": [
+        { "ko": "별장", "en": "Vacation Home" },
+        { "ko": "공원", "en": "Park" },
+        { "ko": "슈퍼마켓", "en": "Supermarket" },
+        { "ko": "학교", "en": "School" },
+        { "ko": "숲속", "en": "Woods" },
+        { "ko": "은행", "en": "Bank" }
+      ]
+    },
+    {
+      "id": "loc_3",
+      "category_ko": "범죄 장소",
+      "category_en": "Location of Crime",
+      "options": [
+        { "ko": "거실", "en": "Living Room" },
+        { "ko": "침실", "en": "Bedroom" },
+        { "ko": "창고", "en": "Storeroom" },
+        { "ko": "화장실", "en": "Bathroom" },
+        { "ko": "부엌", "en": "Kitchen" },
+        { "ko": "발코니", "en": "Balcony" }
+      ]
+    },
+    {
+      "id": "loc_4",
+      "category_ko": "범죄 장소",
+      "category_en": "Location of Crime",
+      "options": [
+        { "ko": "놀이터", "en": "Playground" },
+        { "ko": "교실", "en": "Classroom" },
+        { "ko": "기숙사", "en": "Dormitory" },
+        { "ko": "구내식당", "en": "Cafeteria" },
+        { "ko": "엘리베이터", "en": "Elevator" },
+        { "ko": "공중 화장실", "en": "Toilet" }
+      ]
+    }
+  ],
+  "scene_tiles": [
+    {
+      "id": "t01",
+      "category_ko": "목격자가 진술",
+      "category_en": "Noticed by Bystander",
+      "options": [
+        { "ko": "갑작스러운 소리", "en": "Sudden sound" },
+        { "ko": "연속적인 소리", "en": "Prolonged sound" },
+        { "ko": "냄새", "en": "Smell" },
+        { "ko": "시각적", "en": "Visual" },
+        { "ko": "움직임", "en": "Action" },
+        { "ko": "없음", "en": "Nothing" }
+      ]
+    },
+    {
+      "id": "t02",
+      "category_ko": "범죄 현장 상황",
+      "category_en": "State of the Scene",
+      "options": [
+        { "ko": "어질러져 있음", "en": "Bits and Pieces" },
+        { "ko": "잿더미", "en": "Ashes" },
+        { "ko": "물얼룩", "en": "Water Stain" },
+        { "ko": "깨진 흔적", "en": "Cracked" },
+        { "ko": "무질서함", "en": "Disorderly" },
+        { "ko": "정돈됨", "en": "Tidy" }
+      ]
+    },
+    {
+      "id": "t03",
+      "category_ko": "갑작스러운 사건",
+      "category_en": "Sudden Incident",
+      "options": [
+        { "ko": "정전", "en": "Power Failure" },
+        { "ko": "화재", "en": "Fire" },
+        { "ko": "다툼", "en": "Conflict" },
+        { "ko": "귀중품 도난", "en": "Loss of Valuables" },
+        { "ko": "비명", "en": "Scream" },
+        { "ko": "없음", "en": "Nothing" }
+      ]
+    },
+    {
+      "id": "t04",
+      "category_ko": "사망 시각",
+      "category_en": "Time of Death",
+      "options": [
+        { "ko": "새벽", "en": "Dawn" },
+        { "ko": "아침", "en": "Morning" },
+        { "ko": "정오", "en": "Noon" },
+        { "ko": "오후", "en": "Afternoon" },
+        { "ko": "저녁", "en": "Evening" },
+        { "ko": "밤", "en": "Night" }
+      ]
+    },
+    {
+      "id": "t05",
+      "category_ko": "현장에 남겨진 흔적",
+      "category_en": "Trace at the Scene",
+      "options": [
+        { "ko": "지문", "en": "Fingerprint" },
+        { "ko": "발자국", "en": "Footprint" },
+        { "ko": "타박상", "en": "Bruise" },
+        { "ko": "핏자국", "en": "Blood Stain" },
+        { "ko": "체액", "en": "Bodily Fluid" },
+        { "ko": "흉터", "en": "Scar" }
+      ]
+    },
+    {
+      "id": "t06",
+      "category_ko": "피해자의 신체특성",
+      "category_en": "Victim's Build",
+      "options": [
+        { "ko": "큰 체격", "en": "Large" },
+        { "ko": "마름", "en": "Thin" },
+        { "ko": "키가 큼", "en": "Tall" },
+        { "ko": "키가 작음", "en": "Short" },
+        { "ko": "장애가 있음", "en": "Disfigured" },
+        { "ko": "보통의 체격", "en": "Fit" }
+      ]
+    },
+    {
+      "id": "t07",
+      "category_ko": "피해자의 복장상태",
+      "category_en": "Victim's Clothes",
+      "options": [
+        { "ko": "단정함", "en": "Neat" },
+        { "ko": "지저분함", "en": "Untidy" },
+        { "ko": "우아함", "en": "Elegant" },
+        { "ko": "허름함", "en": "Shabby" },
+        { "ko": "독특함", "en": "Bizarre" },
+        { "ko": "나체", "en": "Naked" }
+      ]
+    },
+    {
+      "id": "t08",
+      "category_ko": "피해자의 표정",
+      "category_en": "Victim's Expression",
+      "options": [
+        { "ko": "평온함", "en": "Peaceful" },
+        { "ko": "힘겨워함", "en": "Struggling" },
+        { "ko": "겁먹음", "en": "Frightened" },
+        { "ko": "고통스러움", "en": "In Pain" },
+        { "ko": "무표정함", "en": "Blank" },
+        { "ko": "화남", "en": "Angry" }
+      ]
+    },
+    {
+      "id": "t09",
+      "category_ko": "피해자의 신원",
+      "category_en": "Victim's Identity",
+      "options": [
+        { "ko": "어린이", "en": "Child" },
+        { "ko": "청소년", "en": "Young Adult" },
+        { "ko": "중년", "en": "Middle-Aged" },
+        { "ko": "노인", "en": "Senior" },
+        { "ko": "남성", "en": "Male" },
+        { "ko": "여성", "en": "Female" }
+      ]
+    },
+    {
+      "id": "t10",
+      "category_ko": "피해자의 직업",
+      "category_en": "Victim's Occupation",
+      "options": [
+        { "ko": "경영직", "en": "Boss" },
+        { "ko": "전문직", "en": "Professional" },
+        { "ko": "노동직", "en": "Worker" },
+        { "ko": "학생", "en": "Student" },
+        { "ko": "무직", "en": "Unemployed" },
+        { "ko": "은퇴", "en": "Retired" }
+      ]
+    },
+    {
+      "id": "t11",
+      "category_ko": "날씨",
+      "category_en": "Weather",
+      "options": [
+        { "ko": "맑음", "en": "Sunny" },
+        { "ko": "폭풍우", "en": "Stormy" },
+        { "ko": "건조함", "en": "Dry" },
+        { "ko": "습함", "en": "Humid" },
+        { "ko": "추운 날씨", "en": "Cold" },
+        { "ko": "더운 날씨", "en": "Hot" }
+      ]
+    },
+    {
+      "id": "t12",
+      "category_ko": "발견된 증거",
+      "category_en": "Evidence Left Behind",
+      "options": [
+        { "ko": "자연스러움", "en": "Natural" },
+        { "ko": "예술적", "en": "Artistic" },
+        { "ko": "기록되어 있음", "en": "Written" },
+        { "ko": "인조 물질", "en": "Synthetic" },
+        { "ko": "개인적", "en": "Personal" },
+        { "ko": "관계없음", "en": "Unrelated" }
+      ]
+    },
+    {
+      "id": "t13",
+      "category_ko": "범죄 동기",
+      "category_en": "Motive of Crime",
+      "options": [
+        { "ko": "증오", "en": "Hatred" },
+        { "ko": "권력", "en": "Power" },
+        { "ko": "돈", "en": "Money" },
+        { "ko": "사랑", "en": "Love" },
+        { "ko": "질투", "en": "Jealousy" },
+        { "ko": "정의", "en": "Justice" }
+      ]
+    },
+    {
+      "id": "t14",
+      "category_ko": "살인자의 성격",
+      "category_en": "Murderer's Personality",
+      "options": [
+        { "ko": "오만한", "en": "Arrogant" },
+        { "ko": "비열한", "en": "Despicable" },
+        { "ko": "다혈질", "en": "Furious" },
+        { "ko": "탐욕스러운", "en": "Greedy" },
+        { "ko": "강압적", "en": "Forceful" },
+        { "ko": "변태적", "en": "Perverted" }
+      ]
+    },
+    {
+      "id": "t15",
+      "category_ko": "사체의 상태",
+      "category_en": "Corpse Condition",
+      "options": [
+        { "ko": "온기가 남아 있음", "en": "Still Warm" },
+        { "ko": "경직됨", "en": "Stiff" },
+        { "ko": "부패함", "en": "Decayed" },
+        { "ko": "훼손됨", "en": "Incomplete" },
+        { "ko": "온전함", "en": "Intact" },
+        { "ko": "뒤틀림", "en": "Twisted" }
+      ]
+    },
+    {
+      "id": "t16",
+      "category_ko": "사회적 관계",
+      "category_en": "Social Relationship",
+      "options": [
+        { "ko": "가족", "en": "Relatives" },
+        { "ko": "친구", "en": "Friends" },
+        { "ko": "동료", "en": "Colleagues" },
+        { "ko": "고용주/종업원", "en": "Employer/Employee" },
+        { "ko": "연인", "en": "Lovers" },
+        { "ko": "모르는 사람", "en": "Strangers" }
+      ]
+    },
+    {
+      "id": "t17",
+      "category_ko": "범죄 기간",
+      "category_en": "Duration of Crime",
+      "options": [
+        { "ko": "즉각적", "en": "Instantaneous" },
+        { "ko": "단시간", "en": "Brief" },
+        { "ko": "점진적", "en": "Gradual" },
+        { "ko": "장기적", "en": "Prolonged" },
+        { "ko": "며칠 동안", "en": "Few Days" },
+        { "ko": "확실하지 않음", "en": "Unclear" }
+      ]
+    },
+    {
+      "id": "t18",
+      "category_ko": "사건 당일",
+      "category_en": "Day of Crime",
+      "options": [
+        { "ko": "평일", "en": "Weekday" },
+        { "ko": "주말", "en": "Weekend" },
+        { "ko": "봄", "en": "Spring" },
+        { "ko": "여름", "en": "Summer" },
+        { "ko": "가을", "en": "Autumn" },
+        { "ko": "겨울", "en": "Winter" }
+      ]
+    },
+    {
+      "id": "t19",
+      "category_ko": "범행시 상황",
+      "category_en": "In Progress",
+      "options": [
+        { "ko": "여가중", "en": "Entertainment" },
+        { "ko": "휴식중", "en": "Relaxation" },
+        { "ko": "회의중", "en": "Assembly" },
+        { "ko": "거래중", "en": "Trading" },
+        { "ko": "방문중", "en": "Visit" },
+        { "ko": "식사중", "en": "Dining" }
+      ]
+    },
+    {
+      "id": "t20",
+      "category_ko": "사체에서의 단서",
+      "category_en": "Hint on Corpse",
+      "options": [
+        { "ko": "머리", "en": "Head" },
+        { "ko": "가슴", "en": "Chest" },
+        { "ko": "손", "en": "Hand" },
+        { "ko": "다리", "en": "Leg" },
+        { "ko": "일부분", "en": "Partial" },
+        { "ko": "전체적", "en": "All-over" }
+      ]
+    },
+    {
+      "id": "t21",
+      "category_ko": "전반적인 인상",
+      "category_en": "General Impression",
+      "options": [
+        { "ko": "평범함", "en": "Common" },
+        { "ko": "창의적", "en": "Creative" },
+        { "ko": "수상함", "en": "Fishy" },
+        { "ko": "잔인함", "en": "Cruel" },
+        { "ko": "공포스러움", "en": "Horrible" },
+        { "ko": "긴장감 넘침", "en": "Suspenseful" }
+      ]
+    }
+  ]
+}
