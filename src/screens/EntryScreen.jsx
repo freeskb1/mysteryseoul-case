@@ -1,4 +1,4 @@
-export default function EntryScreen({ onSelectHost, onSelectJoin }) {
+export default function EntryScreen({ onSelectHost, onSelectJoin, onSelectBroker }) {
   return (
     <div style={s.wrap}>
       <div style={s.phone}>
@@ -15,9 +15,18 @@ export default function EntryScreen({ onSelectHost, onSelectJoin }) {
           <button onClick={onSelectJoin} style={s.secondaryBtn}>
             ↪ 사건 참여하기
           </button>
+          <div style={s.divider}>
+            <span style={s.dividerLine}></span>
+            <span style={s.dividerText}>또는</span>
+            <span style={s.dividerLine}></span>
+          </div>
+          <button onClick={onSelectBroker} style={s.brokerBtn}>
+            🖥 큰 화면으로 입장
+            <span style={s.brokerHint}>PC · TV · 태블릿 (한 방에 1대만)</span>
+          </button>
         </div>
         
-        <p style={s.version}>v0.1 MVP · 4–12명용</p>
+        <p style={s.version}>v0.2 MVP · 4–12명용</p>
       </div>
     </div>
   )
@@ -43,7 +52,7 @@ const s = {
   },
   titleArea: {
     textAlign: 'center',
-    marginTop: 40
+    marginTop: 20
   },
   brand: {
     fontSize: 11,
@@ -89,6 +98,38 @@ const s = {
     fontSize: 16,
     fontWeight: 500,
     cursor: 'pointer'
+  },
+  divider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    margin: '4px 0'
+  },
+  dividerLine: {
+    flex: 1,
+    height: 0,
+    borderTop: '0.5px solid rgba(244, 232, 208, 0.15)'
+  },
+  dividerText: {
+    fontSize: 11,
+    color: '#888780'
+  },
+  brokerBtn: {
+    background: 'transparent',
+    color: '#888780',
+    border: '0.5px dashed rgba(244, 232, 208, 0.3)',
+    padding: 14,
+    borderRadius: 8,
+    fontSize: 14,
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4
+  },
+  brokerHint: {
+    fontSize: 10,
+    color: '#666',
+    fontWeight: 400
   },
   version: {
     textAlign: 'center',
