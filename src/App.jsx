@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ref, set, get, onValue, update, serverTimestamp, off } from 'firebase/database'
+import { ref, set, get, onValue, update, serverTimestamp, off, remove } from 'firebase/database'
 import { db, ensureAuth } from './firebase.js'
 import { generateRoomCode, distributeCards } from './gameLogic.js'
 
@@ -15,26 +15,26 @@ import LobbyScreen from './screens/LobbyScreen.jsx'
 import PlayerCardScreen from './screens/PlayerCardScreen.jsx'
 import BrokerBoardScreen from './screens/BrokerBoardScreen.jsx'
 import MurdererChooseScreen from './screens/MurdererChooseScreen.jsx'
+import AccompliceRevealScreen from './screens/AccompliceRevealScreen.jsx'
+import WitnessRevealScreen from './screens/WitnessRevealScreen.jsx'
 import ForensicTakeoverScreen from './screens/ForensicTakeoverScreen.jsx'
 import WaitingScreen from './screens/WaitingScreen.jsx'
+import ForensicProgressGuide from './screens/ForensicProgressGuide.jsx'
 
 export default function App() {
   const [user, setUser] = useState(null)
   const [view, setView] = useState('entry')
-  // entry | hostStart | join | brokerJoin | lobby | game
   const [roomCode, setRoomCode] = useState(null)
   const [roomData, setRoomData] = useState(null)
   const [error, setError] = useState(null)
-  const [deviceType, setDeviceType] = useState(null) // 'player' | 'broker'
+  const [deviceType, setDeviceType] = useState(null)
 
-  // 익명 로그인
   useEffect(() => {
     ensureAuth()
       .then(setUser)
       .catch((e) => setError('인증 실패: ' + e.message))
   }, [])
 
-  // 방 데이터 실시간 구독
   useEffect(() => {
     if (!roomCode) return
     const roomRef = ref(db, `rooms/${roomCode}`)
@@ -44,23 +44,22 @@ export default function App() {
         setError('방이 존재하지 않거나 종료되었습니다')
         setRoomCode(null)
         setRoomData(null)
+        setDeviceType(null)
         setView('entry')
         return
       }
       setRoomData(data)
       
-      // phase에 따라 화면 자동 전환
       const phase = data.meta?.phase
       if (phase === 'waiting') {
         setView('lobby')
-      } else if (['murderer_choosing', 'forensic_setup', 'playing'].includes(phase)) {
+      } else if (['murderer_choosing', 'accomplice_reveal', 'witness_reveal', 'forensic_setup', 'playing'].includes(phase)) {
         setView('game')
       }
     })
     return () => off(roomRef)
   }, [roomCode])
 
-  // 호스트: 새 방 생성
   async function handleCreateRoom(nickname) {
     if (!user) return
     setError(null)
@@ -87,7 +86,9 @@ export default function App() {
         options: { accomplice: true, witness: true, difficulty: 4 },
         brokerDeviceId: null,
         forensicTookOver: false,
-        murdererId: null
+        murdererId: null,
+        accompliceConfirmed: false,
+        witnessConfirmed: false
       },
       players: {
         [user.uid]: {
@@ -103,7 +104,6 @@ export default function App() {
     setView('lobby')
   }
 
-  // 참여자: 방 입장
   async function handleJoinRoom(code, nickname) {
     if (!user) return
     setError(null)
@@ -136,7 +136,6 @@ export default function App() {
     setView('lobby')
   }
 
-  // 큰 화면 입장
   async function handleBrokerJoin(code) {
     if (!user) return
     setError(null)
@@ -149,10 +148,14 @@ export default function App() {
     }
     const data = snap.val()
     
-    // 이미 다른 큰 화면이 등록되어 있는지 확인
     if (data.meta?.brokerDeviceId && data.meta.brokerDeviceId !== user.uid) {
       setError('이미 다른 큰 화면이 등록되어 있습니다')
       return
+    }
+
+    // 만약 같은 user.uid가 players에 있으면 제거 (이전에 플레이어로 들어갔던 경우 잔상 방지)
+    if (data.players && data.players[user.uid]) {
+      await remove(ref(db, `rooms/${upperCode}/players/${user.uid}`))
     }
 
     await update(ref(db, `rooms/${upperCode}/meta`), {
@@ -164,7 +167,6 @@ export default function App() {
     setView('lobby')
   }
 
-  // 호스트: 게임 시작
   async function handleStartGame() {
     if (!roomData || !user) return
     if (roomData.meta.hostId !== user.uid) {
@@ -188,7 +190,6 @@ export default function App() {
       difficulty: options.difficulty
     })
 
-    // 살인자 ID 찾기
     let murdererId = null
     Object.entries(distribution).forEach(([pid, data]) => {
       if (data.role === 'murderer') {
@@ -209,7 +210,6 @@ export default function App() {
     await update(ref(db), updates)
   }
 
-  // 살인자: 사인+단서 선택 확정
   async function handleMurdererConfirm(weapon, clue) {
     if (!roomData || !user) return
     if (roomData.meta.murdererId !== user.uid) return
@@ -219,13 +219,49 @@ export default function App() {
       chosenClue: clue
     })
     
-    // phase를 forensic_setup으로 변경
+    const players = roomData.players
+    const hasAccomplice = Object.values(players).some(p => p.role === 'accomplice')
+    const hasWitness = Object.values(players).some(p => p.role === 'witness')
+    
+    let nextPhase = 'forensic_setup'
+    if (hasAccomplice) {
+      nextPhase = 'accomplice_reveal'
+    } else if (hasWitness) {
+      nextPhase = 'witness_reveal'
+    }
+    
     await update(ref(db, `rooms/${roomCode}/meta`), {
+      phase: nextPhase
+    })
+  }
+
+  async function handleAccompliceConfirm() {
+    if (!roomData || !user) return
+    const me = roomData.players[user.uid]
+    if (me?.role !== 'accomplice') return
+
+    const players = roomData.players
+    const hasWitness = Object.values(players).some(p => p.role === 'witness')
+    
+    const nextPhase = hasWitness ? 'witness_reveal' : 'forensic_setup'
+    
+    await update(ref(db, `rooms/${roomCode}/meta`), {
+      accompliceConfirmed: true,
+      phase: nextPhase
+    })
+  }
+
+  async function handleWitnessConfirm() {
+    if (!roomData || !user) return
+    const me = roomData.players[user.uid]
+    if (me?.role !== 'witness') return
+
+    await update(ref(db, `rooms/${roomCode}/meta`), {
+      witnessConfirmed: true,
       phase: 'forensic_setup'
     })
   }
 
-  // 법의학자: 콘솔 인계
   async function handleForensicTakeover() {
     if (!roomData || !user) return
     const me = roomData.players[user.uid]
@@ -237,19 +273,37 @@ export default function App() {
     })
   }
 
+  // 방 나가기 - Firebase 정리
   async function handleLeaveRoom() {
-    if (roomCode && user) {
-      // 큰 화면이면 브로커 등록 해제
-      if (deviceType === 'broker' && roomData?.meta?.brokerDeviceId === user.uid) {
-        await update(ref(db, `rooms/${roomCode}/meta`), {
-          brokerDeviceId: null
-        })
+    if (!roomCode || !user) return
+    
+    try {
+      if (deviceType === 'broker') {
+        // 큰 화면 해제
+        if (roomData?.meta?.brokerDeviceId === user.uid) {
+          await update(ref(db, `rooms/${roomCode}/meta`), {
+            brokerDeviceId: null
+          })
+        }
+      } else {
+        // 플레이어 — 호스트면 방 자체 폐쇄, 아니면 자기만 제거
+        const isHost = roomData?.players?.[user.uid]?.isHost
+        if (isHost) {
+          // 호스트가 나가면 방 폐쇄 (다른 모든 사람도 튕김)
+          await remove(ref(db, `rooms/${roomCode}`))
+        } else {
+          // 자기 정보만 삭제
+          await remove(ref(db, `rooms/${roomCode}/players/${user.uid}`))
+        }
       }
-      setRoomCode(null)
-      setRoomData(null)
-      setDeviceType(null)
-      setView('entry')
+    } catch (e) {
+      console.error('방 나가기 실패:', e)
     }
+    
+    setRoomCode(null)
+    setRoomData(null)
+    setDeviceType(null)
+    setView('entry')
   }
 
   if (!user) {
@@ -260,7 +314,6 @@ export default function App() {
     )
   }
 
-  // 에러 배너
   const errorBanner = error && (
     <div style={errorBannerStyle}>
       {error}
@@ -268,7 +321,6 @@ export default function App() {
     </div>
   )
 
-  // 입력 화면들
   if (view === 'entry') {
     return (
       <div>
@@ -315,7 +367,6 @@ export default function App() {
     )
   }
 
-  // 방 데이터 없음
   if (!roomData) {
     return (
       <div>
@@ -325,7 +376,6 @@ export default function App() {
     )
   }
 
-  // 큰 화면 (Broker) 분기
   if (deviceType === 'broker') {
     return (
       <div>
@@ -340,8 +390,6 @@ export default function App() {
     )
   }
 
-  // 일반 플레이어 (스마트폰) 분기
-  // 1. 대기실
   if (view === 'lobby') {
     return (
       <div>
@@ -357,13 +405,16 @@ export default function App() {
     )
   }
 
-  // 2. 게임 중 — phase별 분기
   const phase = roomData.meta?.phase
   const me = roomData.players?.[user.uid]
   const isMurderer = me?.role === 'murderer'
+  const isAccomplice = me?.role === 'accomplice'
+  const isWitness = me?.role === 'witness'
   const isForensic = me?.role === 'forensic'
+  const murdererId = roomData.meta?.murdererId
+  const murderer = murdererId ? roomData.players[murdererId] : null
 
-  // 살인자 카드 선택 단계
+  // 1. 살인자 카드 선택 단계
   if (phase === 'murderer_choosing') {
     if (isMurderer && !me.chosenWeapon) {
       return (
@@ -372,6 +423,18 @@ export default function App() {
           <MurdererChooseScreen 
             me={me}
             onConfirm={handleMurdererConfirm}
+          />
+        </div>
+      )
+    }
+    // 법의학자에게는 진행자 가이드 표시
+    if (isForensic) {
+      return (
+        <div>
+          {errorBanner}
+          <ForensicProgressGuide
+            phase="murderer_choosing"
+            roomData={roomData}
           />
         </div>
       )
@@ -388,7 +451,88 @@ export default function App() {
     )
   }
 
-  // 법의학자 콘솔 인계 단계
+  // 2. 공범자 노출 단계
+  if (phase === 'accomplice_reveal') {
+    if (isAccomplice) {
+      return (
+        <div>
+          {errorBanner}
+          <AccompliceRevealScreen
+            me={me}
+            murderer={murderer}
+            onConfirm={handleAccompliceConfirm}
+          />
+        </div>
+      )
+    }
+    if (isForensic) {
+      return (
+        <div>
+          {errorBanner}
+          <ForensicProgressGuide
+            phase="accomplice_reveal"
+            roomData={roomData}
+          />
+        </div>
+      )
+    }
+    return (
+      <div>
+        {errorBanner}
+        <WaitingScreen 
+          icon="🤝"
+          message="공범자가 정보를 확인하는 중..."
+          subMessage="잠시 기다려 주세요"
+        />
+      </div>
+    )
+  }
+
+  // 3. 목격자 노출 단계
+  if (phase === 'witness_reveal') {
+    if (isWitness) {
+      const candidates = []
+      Object.entries(roomData.players || {}).forEach(([uid, p]) => {
+        if (p.role === 'murderer' || p.role === 'accomplice') {
+          candidates.push({ uid, ...p })
+        }
+      })
+      const shuffled = [...candidates].sort(() => Math.random() - 0.5)
+      
+      return (
+        <div>
+          {errorBanner}
+          <WitnessRevealScreen
+            candidates={shuffled}
+            onConfirm={handleWitnessConfirm}
+          />
+        </div>
+      )
+    }
+    if (isForensic) {
+      return (
+        <div>
+          {errorBanner}
+          <ForensicProgressGuide
+            phase="witness_reveal"
+            roomData={roomData}
+          />
+        </div>
+      )
+    }
+    return (
+      <div>
+        {errorBanner}
+        <WaitingScreen 
+          icon="👁"
+          message="목격자가 후보를 확인하는 중..."
+          subMessage="잠시 기다려 주세요"
+        />
+      </div>
+    )
+  }
+
+  // 4. 법의학자 콘솔 인계
   if (phase === 'forensic_setup') {
     if (isForensic) {
       return (
@@ -410,7 +554,7 @@ export default function App() {
     )
   }
 
-  // 본 게임 진행 (마커 배치 등은 MVP 2-B에서)
+  // 5. 본 게임
   if (phase === 'playing') {
     return (
       <div>
@@ -425,7 +569,6 @@ export default function App() {
     )
   }
 
-  // 폴백
   return (
     <div>
       {errorBanner}
